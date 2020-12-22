@@ -1,12 +1,9 @@
 <template>
 
       
-            <div class="card" @click="clicou()">
-                <button @click="querodel()" id="buttonDel" >X</button>
-                   
-<router-link  to="/Saiba">
-           <img class="fotoPet" :src='Animal.urlImage'>
-</router-link>
+            <div class="card"  >
+                <button @click.prevent="querodel()" id="buttonDel" > X</button>
+           <img class="fotoPet" :src='Animal.urlImage' @click="ConhecerMelhor" >
            <h3>Nome: {{Animal.nome}}</h3>
             <h3>Preço:{{Animal.preco}}</h3>
             <h3>Idade: {{Animal.idade}}</h3>
@@ -43,7 +40,12 @@ export default{
 
             console.log("estou pronto para ser excluido, emitindo evento do filho")
 
-            this.$emit("meDelete", {idAnimal:this.Animal.id, component: this}) //posso passar qualquer dado por aqui
+            this.$emit("meDelete", {idAnimal:this.Animal._id, component: this}) //posso passar qualquer dado por aqui
+        },
+
+        ConhecerMelhor:function(){
+            this.$emit("meConhecaMelhor", {idAnimal:this.Animal._id, component: this})
+
         },
 
         teste: function(){
@@ -51,11 +53,11 @@ export default{
 
         },
 
-        clicou: function(){
+       /* clicou: function(){
                 alert("o usuario clicou na div mds")
-                 this.$emit("meVejaMelhor", {idAnimal:this.Animal.id, component: this})
+                 this.$emit("meVejaMelhor", {idAnimal:this.Animal._id, component: this})
 
-        }
+        }*/
     }
 
 }

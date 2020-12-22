@@ -16,48 +16,69 @@ router.post('/create', async(req, res) =>{
         sexo:req.body.sexo,
         preco:req.body.preco,
         urlImage:req.body.urlImage,
-        espécie:req.body.especie,
-        
-
+        espécie:req.body.espécie,
     });
-
     res.status(201).send();
 })
-
 //VER TODOS ANIMAIS
 
 router.get('/', async (req,res)=>{
     const animals = await getAllDoc();
     res.send(await animals.find({}).toArray());
 
-    res.json({"message":"API-EXPRESS"})
+    //res.json({"message":"API-EXPRESS"})
 })
-
 
 //VER ANIMAL COM A PARTIR DE UM ID
-router.get('/Animal/:id', (req,res)=>{
+router.get('/Saiba/:id', async(req, res)=>{
 
-    res.send('get.animal = get animal by id')
-})
+    try{
 
+const id = req.params.id
+    const animais  = await getAllDoc();
+    
+   animais.findOne({"_id": mongodb.ObjectId(id)}, function(err, result) {
+        if (!err) {
+     
+                res.send(result)
+                console.log(result)
+                console.log(typeof(result))
+        }
+        else {
+            console.log(err)      
+        }
+        
+    });
+}
+catch(error){
+
+}
+});
 
 //EXCLUIR ANIMAL
 
-router.delete('/:id', async(req, res)=>{
+router.delete('/delete/:id', async(req, res)=>{
+    console.log(req.params.id + "trueeee")
+const id = req.params.id
 
-    const animal = await deleteAnimalwithID();
-    await animal.deleteONe({
+    const animais  = await getAllDoc();
+    
+    animais.deleteOne({"_id": mongodb.ObjectId(id)}, function(err, result) {
+        if (!err) {
+                console.log("deu")
+        }
+        else {
+            console.log(err)   
+        }
+    });
 
-        _id: new mongodb.ObjectID(req.params.id)
-
-        
-    })
-    res.status(200).send()
+   
+    
 });
 
 async function getAllDoc(){
     const client = await mongodb.MongoClient.connect('mongodb+srv://thiagocazuni:24491372@cluster0.vzngj.mongodb.net/eventos?retryWrites=true&w=majority', {
-
+        useUnifiedTopology: true,
 
     useNewUrlParser: true
     });

@@ -1,11 +1,11 @@
 <template>
   <div class="home">
 
-    <div id="animais">
+    <div id="animais" >
       <div v-for="animal in Animais" :key="animal.id"> <!-- vai separar o array Animais em unidades que estaram contidas em animal e depois vai alterando conforme a iteraçao -->
       
         
-          <Animals :Animal="animal" @meDelete="deletarAnimal($event)" /> <!-- a props que o componente exige "Animal" pega o dado atual de animal, lembrando que este está sempre mudando -->
+          <Animals :Animal="animal" @meDelete="deletarAnimal($event)" @meConhecaMelhor="saibaMais" /> <!-- a props que o componente exige "Animal" pega o dado atual de animal, lembrando que este está sempre mudando -->
        
       </div>
 </div>
@@ -68,14 +68,10 @@ especie:'',}
 
     }},
 methods:{
+  
 
   async createAnimal(){
-  // await PostService.insertPost(this.nome, this.sexo, this.idade, this.urlField, this.especie, this.preco);
-  alert("deu")
-
-//console.log("09iqpjpm")
-
-//console.log("animal" + this.User.nome)
+ 
      let newAnimal = {
     nome:this.Animal.nome,
     espécie:this.Animal.especie,
@@ -99,19 +95,42 @@ methods:{
     console.log(error)
   })
 
-  }
-},
-    mounted(){
+  },
 
-    //get animals
+  saibaMais($event){
+
+   let id =  $event.idAnimal
+
+    console.log(id)
+    window.location.href = "http://localhost:8080/Saiba/"+id
+  },
+
+  //DELETAR ANIMAL
+ async deletarAnimal($event){
+
+    let ide = $event.idAnimal;
+axios.delete('http://localhost:3000/delete/'+ide)
+ .then((response)=>{
+  console.log(response)
+  
+  })
+  .catch((error)=>{
+    console.log(error + "error")
+  })
+  window.location.reload()
+  }
+
+  
+},
+   async mounted(){
 
     axios.get('http://localhost:3000/')
     .then((response)=>{
       //console.log(response.data)
-
+ 
       this.Animais = response.data
 
-      console.log(this.Animais)
+      console.log(response)
 
     })
     .catch((error)=>{
